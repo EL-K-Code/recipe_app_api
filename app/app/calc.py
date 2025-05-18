@@ -2,12 +2,13 @@
 Calculator function
 """
 
-def add(x,y) :
+
+def add(x, y):
     """
     Add two number
     """
-    return x+y
+    return x + y
 
 
-def substract(x,y):
-    return y-x
+def substract(x, y):
+    return y - x
