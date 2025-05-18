@@ -1,0 +1,17 @@
+version: '3.9'  # Version du schéma Docker Compose utilisée
+
+services:
+  app:  # Nom du service (conteneur) principal
+    build:
+      context: .  # Utilise le Dockerfile présent dans le répertoire courant
+      args:
+        - DEV=true
+    ports:
+      - "8000:8000"  # Expose le port 8000 du conteneur sur le port 8000 de l’hôte
+    volumes:
+      - ./app:/app  # Monte le dossier local ./app dans /app dans le conteneur (rechargement à chaud du code)
+    command: >  # Commande lancée au démarrage du conteneur
+      sh -c "python manage.py runserver 0.0.0.0:8000"  
+
+       
+

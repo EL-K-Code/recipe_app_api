@@ -1,0 +1,8 @@
+# Préciser les fichiers à exclure lors du lintage
+[flake8]
+exclude =
+    migrations,
+    __pycache__,
+    manage.py,
+    settins.py 
+
