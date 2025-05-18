@@ -11,7 +11,9 @@ services:
     volumes:
       - ./app:/app  # Monte le dossier local ./app dans /app dans le conteneur (rechargement à chaud du code)
     command: >  # Commande lancée au démarrage du conteneur
-      sh -c "python manage.py runserver 0.0.0.0:8000"  
+      sh -c "python manage.py  wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"  
     environment:
       - DB_HOST=db
       - DB_NAME=devdb

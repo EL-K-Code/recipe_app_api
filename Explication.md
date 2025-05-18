@@ -76,7 +76,6 @@ docker compose exec app sh -c "python manage.py runserver 0.0.0.0:8000"
 # Étape 8 : Accéder à votre application Django
 
 Ouvrez votre navigateur à l’adresse http://localhost:8000. Vous verrez la page d’accueil de votre projet Django en marche,prouvant que tout fonctionne dans Docker !
-```
 
 Pour lancer exécuter une action dans notre conteneur Django, il suffit d'utiliser 
 
