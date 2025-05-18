@@ -6,7 +6,7 @@ on: [push]
 jobs:
   test-lint:
     name: Test and Lint
-    runs-on: ubuntu-20.04      # Corrigé "ubuntu-20.O4" -> "ubuntu-20.04"
+    runs-on: ubuntu-latest    # Corrigé "ubuntu-20.O4" -> "ubuntu-20.04"
     steps:
       - name: Checkout         # Le checkout doit venir avant le login Docker pour accéder au code
         uses: actions/checkout@v2
