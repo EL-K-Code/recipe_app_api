@@ -21,6 +21,10 @@ jobs:
       - name: Check formatting with Black
         run: docker compose run --rm app sh -c "black --check ."
 
+      - name: Format imports with isort
+        run: docker compose run --rm app sh -c "isort . --check-only"
+
+
       - name: Lint with flake8
         run: docker compose run --rm app sh -c "flake8"
 

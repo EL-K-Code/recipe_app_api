@@ -1,5 +1,3 @@
-version: '3.9'  # Version du schéma Docker Compose utilisée
-
 services:
   app:  # Nom du service (conteneur) principal
     build:
