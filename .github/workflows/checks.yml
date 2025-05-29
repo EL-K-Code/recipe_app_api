@@ -18,19 +18,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Check formatting with Black
-        run: docker compose run --rm app sh -c "black --check ."
-
-      - name: Format imports with isort
-        run: docker compose run --rm app sh -c "isort ."
-
       - name: Run pre-commit hooks
-        run: docker compose run --rm app sh -c "pre-commit run --all-files --show-diff-on-failure"
-
-
-
-      - name: Lint with flake8
-        run: docker compose run --rm app sh -c "flake8 --config=app/.flake8"
+        env:
+          PRE_COMMIT_HOME: /tmp/pre-commit-cache
+        run: docker compose run --rm -e PRE_COMMIT_HOME=/tmp/pre-commit-cache app sh -c "pre-commit run --all-files --show-diff-on-failure"
 
       - name: Run tests
         run: docker compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
