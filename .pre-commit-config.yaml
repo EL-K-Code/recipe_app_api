@@ -3,7 +3,7 @@ repos:
     rev: 23.1.0  # Remplace par la dernière version stable
     hooks:
       - id: black
-        language_version: 3.10.12 # adapte selon ta version de Python
+        language_version: python3.10  # adapte selon ta version de Python
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0  # Dernière version isort
@@ -15,6 +15,5 @@ repos:
     rev: 6.0.0
     hooks:
       - id: flake8
-        args: [--config=app/.flake8]
+        args: ["--config=app/.flake8"]
         exclude: ^app/.*/migrations/
-
