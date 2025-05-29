@@ -1,8 +1,15 @@
 # Préciser les fichiers à exclure lors du lintage
 [flake8]
+max-line-length = 95
+extend-ignore = E203, W503, D100,D101,D102,D103,D104,D105,D106,D200,D202,D400,E203
+ignore = D100,D101,D102
 exclude =
-    migrations,
+    .git,
     __pycache__,
-    manage.py,
-    settings.py 
+    build,
+    dist,
+    .venv,
+    env,
+    venv,
+    migrations
 

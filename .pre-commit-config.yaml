@@ -1,0 +1,20 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.1.0  # Remplace par la dernière version stable
+    hooks:
+      - id: black
+        language_version: 3.10.12 # adapte selon ta version de Python
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0  # Dernière version isort
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]  # pour que isort soit compatible avec black
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: [--config=app/.flake8]
+        exclude: ^app/.*/migrations/
+
