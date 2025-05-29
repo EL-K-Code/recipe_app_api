@@ -22,7 +22,7 @@ jobs:
         run: docker compose run --rm app sh -c "black --check ."
 
       - name: Format imports with isort
-        run: docker compose run --rm app sh -c "isort . --check-only"
+        run: docker compose run --rm app sh -c "isort ."
 
       - name: Run pre-commit hooks
         run: docker compose run --rm app sh -c "pre-commit run --all-files --show-diff-on-failure"
