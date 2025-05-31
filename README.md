@@ -35,8 +35,8 @@ API de gestion de recettes de cuisine, construite avec **Django REST Framework**
 ### 1. Cloner le repo
 
 ```bash
-git clone https://github.com/EL-K-Code/recipe-app-api.git
-cd recipe-app-api
+git clone https://github.com/EL-K-Code/recipe_app_api.git
+cd recipe_app_api
 ````
 
 ### 2. Démarrer avec Docker
