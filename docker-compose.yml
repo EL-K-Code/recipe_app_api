@@ -8,6 +8,7 @@ services:
       - "8000:8000"  # Expose le port 8000 du conteneur sur le port 8000 de l’hôte
     volumes:
       - ./app:/app  # Monte le dossier local ./app dans /app dans le conteneur (rechargement à chaud du code)
+      - dev-static-data:/vol/web
     command: >  # Commande lancée au démarrage du conteneur
       sh -c "python manage.py  wait_for_db &&
              python manage.py migrate &&
@@ -34,6 +35,7 @@ services:
 
 volumes:
   dev-db-data:
+  dev-static-data:
 
        
 

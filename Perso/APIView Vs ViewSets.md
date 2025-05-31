@@ -276,4 +276,221 @@ Ensuite :
 | Simplicité + rapidité                | `ViewSet`        |
 | Contrôle fin + logique personnalisée | `APIView`        |
 
+---
+
+
+LES ACTIONS D'UNE VIEWSET
+
+---
+
+## 🔧 Qu’est-ce qu’un `ViewSet` ?
+
+Un `ViewSet` est une classe qui **regroupe plusieurs vues** (GET, POST, PUT, DELETE, etc.) pour gérer un modèle de manière structurée et réutilisable.
+
+---
+
+## 🎯 Les **actions principales** dans un `ModelViewSet`
+
+Un `ModelViewSet` fournit automatiquement 6 actions principales (CRUD complet) :
+
+| Action DRF         | Méthode HTTP | Utilité                                  | URL typique       |
+| ------------------ | ------------ | ---------------------------------------- | ----------------- |
+| `list()`           | GET          | Récupérer une **liste** d’objets         | `/api/recipes/`   |
+| `retrieve()`       | GET          | Récupérer **un objet** précis            | `/api/recipes/1/` |
+| `create()`         | POST         | **Créer** un nouvel objet                | `/api/recipes/`   |
+| `update()`         | PUT          | **Mettre à jour** un objet entièrement   | `/api/recipes/1/` |
+| `partial_update()` | PATCH        | Mettre à jour **partiellement** un objet | `/api/recipes/1/` |
+| `destroy()`        | DELETE       | **Supprimer** un objet                   | `/api/recipes/1/` |
+
+---
+
+## 🔨 Exemple d’un `ModelViewSet`
+
+```python
+from rest_framework import viewsets
+from .models import Recipe
+from .serializers import RecipeSerializer
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+```
+
+Avec ça, tu obtiens toutes les actions automatiquement.
+
+---
+
+## 💡 Personnaliser une action
+
+Tu peux surcharger une action par son nom :
+
+```python
+def create(self, request, *args, **kwargs):
+    # Logique personnalisée
+    return super().create(request, *args, **kwargs)
+```
+
+---
+
+## 🧩 Ajouter une **action personnalisée** avec `@action`
+
+Parfois tu veux une action qui n'est **ni list, ni create, ni retrieve**, etc.
+
+➡️ Utilise `@action` :
+
+```python
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+class RecipeViewSet(viewsets.ModelViewSet):
+
+    @action(detail=True, methods=['post'])
+    def upload_image(self, request, pk=None):
+        recipe = self.get_object()
+        recipe.image = request.FILES.get('image')
+        recipe.save()
+        return Response({'status': 'image uploaded'})
+```
+
+* `detail=True` : s’applique à un objet (ex: `/recipes/1/upload_image/`)
+* `detail=False` : s’applique à la collection (ex: `/recipes/stats/`)
+
+---
+
+## ⚙️ Résumé
+
+| Méthode            | Utilité principale               |
+| ------------------ | -------------------------------- |
+| `list()`           | Liste d’objets                   |
+| `retrieve()`       | Un objet                         |
+| `create()`         | Créer un objet                   |
+| `update()`         | Remplacer un objet               |
+| `partial_update()` | Modifier partiellement un objet  |
+| `destroy()`        | Supprimer                        |
+| `@action`          | Ajouter des comportements custom |
+
+---
+
+
+### 🔍 Contexte d'utilisation
+
+Prenons cet exemple classique dans un `ViewSet` :
+
+```python
+def get_serializer_class(self):
+    if self.action == 'list':
+        return RecipeSerializer
+    elif self.action == 'upload_image':
+        return RecipeImageSerializer
+    return RecipeDetailSerializer
+```
+
+---
+
+### 🔧 À quoi sert `self.action` ?
+
+`self.action` est une propriété de `ViewSet` qui contient le **nom de l’action appelée**. Elle vaut :
+
+* `"list"` → si tu appelles `GET /recipes/`
+* `"retrieve"` → si tu appelles `GET /recipes/1/`
+* `"create"` → si tu appelles `POST /recipes/`
+* `"upload_image"` → si tu appelles une action personnalisée définie avec `@action(name="upload_image")`
+
+---
+
+### 🧠 Pourquoi `'upload_image'` ?
+
+C'est le **nom de l'action personnalisée** que tu as définie :
+
+```python
+from rest_framework.decorators import action
+
+class RecipeViewSet(viewsets.ModelViewSet):
+
+    @action(methods=['POST'], detail=True, url_path='upload-image')
+    def upload_image(self, request, pk=None):
+        ...
+```
+
+➡️ Dans ce cas, `self.action == 'upload_image'` quand cette méthode est appelée.
+
+---
+
+### ✅ Utilité
+
+Cela permet d’utiliser **un serializer spécifique** pour cette action :
+
+```python
+elif self.action == 'upload_image':
+    return RecipeImageSerializer
+```
+
+Ex : le `RecipeImageSerializer` contient seulement un champ `image`, pas tous les détails d'une recette complète.
+
+---
+Quand tu crées une **action personnalisée** dans un `ViewSet` de Django REST Framework (DRF), tu dois :
+
+### 1. Utiliser le décorateur `@action`
+
+Ce décorateur te permet de définir :
+
+* les **méthodes HTTP** supportées (`methods`)
+* si l'action est liée à un objet (avec `detail=True`) ou pas
+* le **nom dans l’URL** (avec `url_path`)
+
+---
+
+### 🧪 Exemple complet :
+
+```python
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    
+    # Action personnalisée pour uploader une image sur une recette existante
+    @action(methods=['POST'], detail=True, url_path='upload-image')
+    def upload_image(self, request, pk=None):
+        recipe = self.get_object()
+        serializer = RecipeImageSerializer(recipe, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+```
+
+---
+
+### 🔍 Explication des paramètres :
+
+| Paramètre                 | Description                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------ |
+| `methods=['POST']`        | Spécifie que cette action accepte uniquement des requêtes POST                             |
+| `detail=True`             | Indique que cette action agit sur une instance spécifique (ex: `/recipes/1/upload-image/`) |
+| `url_path='upload-image'` | Ce sera le suffixe dans l’URL. DRF construira `/recipes/<id>/upload-image/`                |
+
+---
+
+### 🔗 Et ensuite ?
+
+DRF expose cette action dans la route automatiquement (si tu utilises un `DefaultRouter`), donc **pas besoin de l’ajouter manuellement à `urls.py`**.
+
+---
+
+### 💡 Pour les actions globales (non liées à un objet) :
+
+Si tu voulais une action comme `/recipes/stats/`, tu utiliserais :
+
+```python
+@action(methods=['GET'], detail=False, url_path='stats')
+def stats(self, request):
+    ...
+```
+
+---
+
+
 
