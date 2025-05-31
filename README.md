@@ -97,7 +97,8 @@ Dockerfile             # Image pour l'app Django
 
 ## 📄 Licence
 
-Projet sous licence **MIT**. Libre d’utilisation et de modification.
+Ce projet est sous licence MIT – voir le fichier [LICENSE](./LICENSE) pour plus de détails.
+
 
 ---
 
