@@ -68,7 +68,7 @@ docker-compose run --rm app sh -c "python manage.py test"
 Une fois le serveur lancé :
 
 * 📚 Swagger UI : [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
-* 📘 Redoc : [http://localhost:8000/api/schema/redoc](http://localhost:8000/api/schema/redoc)
+* 📘 Schema : [http://localhost:8000/api/schema/](http://localhost:8000/api/schema/)
 
 ---
 
