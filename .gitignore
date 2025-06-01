@@ -4,3 +4,4 @@ Documentation API.md
 Authentification.md
 /Perso
 /.mypy_cache
+.env
